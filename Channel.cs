@@ -32,7 +32,7 @@ namespace System.Net.IRC.Client
 		public event ChannelMessage ChannelEvent;
 
 		private string name;
-		private string title ="";
+		private string title = "";
 		// private string titleCreater;
 		private Server server;
 		//private List<string> nickNames;
@@ -76,6 +76,7 @@ namespace System.Net.IRC.Client
 
 		public void Join(string username)
 		{
+			Console.WriteLine("join: " + username);
 			User user = new User(username);
 			this.nickNames.Add(user);
 			//this.nickNames.Sort();
@@ -84,7 +85,8 @@ namespace System.Net.IRC.Client
 
 		public void Leave(string username)
 		{
-		   // this.nickNames.Remove(username);
+			Console.WriteLine("leave: " + username);
+			// this.nickNames.Remove(username);
 		   
 			this.server.ReceivedChannelCommands(this, "PART");
 		}
@@ -92,7 +94,7 @@ namespace System.Net.IRC.Client
 		public void recevedCommands(string[] commandParts)
 		{
 			string commandAction = commandParts[1];
-			switch (commandAction)
+			switch(commandAction)
 			{
 				case "332":
 				case "333": this.setTitle(commandParts); break;
@@ -100,7 +102,7 @@ namespace System.Net.IRC.Client
 				case "366": break;
 				case "328": break;
 				case "JOIN": this.Join(commandParts[0]); break;
-				case "PART": break;
+				case "PART": this.Leave(commandParts[0]); break;
 				case "MODE": break;
 				case "NICK": break;
 				case "KICK": break;
@@ -139,7 +141,7 @@ namespace System.Net.IRC.Client
 
 		public void setNickNames(string[] commandParts)
 		{
-			for (int intI = 6; intI < commandParts.Length; intI++)
+			for(int intI = 5; intI < commandParts.Length; intI++)
 			{
 				User newUser = new User(commandParts[intI]);
 				this.nickNames.Add(newUser);
