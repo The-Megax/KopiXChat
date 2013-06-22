@@ -703,7 +703,7 @@ namespace KopiXChat
 			this.Controls.Add(this.MenuBar);
 			this.MainMenuStrip = this.MenuBar;
 			this.Name = "MainWindow";
-			this.Text = "Form1";
+			this.Text = "KopiXChat";
 			this.MenuBar.ResumeLayout(false);
 			this.MenuBar.PerformLayout();
 			this.ChannelCount.ResumeLayout(false);
