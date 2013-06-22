@@ -139,7 +139,6 @@ namespace System.Net.IRC.Client
 
 		public void Connect(string host, int port, string username, string name, string password, string nickname)
 		{
-			hostNameParts = new string[host.Split('.').Length];
 			hostNameParts = host.Split('.');
 			this.serverChannel = new Channel(this, hostNameParts[1]);
 			this.host = host;
@@ -253,21 +252,14 @@ namespace System.Net.IRC.Client
 					}
 					*/
 					if(ServerCommandsReceived != null)
-					{
 						this.ServerCommandsReceived(this, command);
-					}
 
-					string[] commandParts = new string[command.Split(' ').Length];
-					commandParts = command.Split(' ');
+					string[] commandParts = command.Split(' ');
 
 					if(commandParts[0].Substring(0, 1) == ":")
-					{
 						commandParts[0] = commandParts[0].Remove(0, 1);
-					}
 
-					string[] commandhostParts = new string[commandParts[0].Split('.').Length];
-					commandhostParts = commandParts[0].Split('.');
-
+					string[] commandhostParts = commandParts[0].Split('.');
 
 					if(commandParts.Length > 3 && (connectedChannels.ContainsKey(commandParts[2]) == true))
 					{
