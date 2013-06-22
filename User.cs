@@ -28,9 +28,9 @@ namespace System.Net.IRC.Client
 	public class User
 	{
 		private string nickName = "";
-		private string connection = "";
+		//private string connection = "";
 		private Color nickColor;
-		private string[] modes;
+		//private string[] modes;
 
 		public string NickName
 		{
@@ -43,10 +43,10 @@ namespace System.Net.IRC.Client
 			get { return this.nickColor; }
 		}
 
-		public string[] Modes
+		/*public string[] Modes
 		{
 			get { return this.modes; }
-		}
+		}*/
 
 		public User(string nickName)
 		{

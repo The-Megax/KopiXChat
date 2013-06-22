@@ -33,7 +33,7 @@ namespace System.Net.IRC.Client
 
 		private string name;
 		private string title ="";
-	   // private string titleCreater;
+		// private string titleCreater;
 		private Server server;
 		//private List<string> nickNames;
 		private List<User> nickNames;
@@ -73,7 +73,6 @@ namespace System.Net.IRC.Client
 			this.server = server;
 			this.name = name;
 		}
-
 
 		public void Join(string username)
 		{

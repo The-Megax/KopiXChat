@@ -62,7 +62,7 @@ namespace KopiXChat
 			this.ircClient.ServerEvent += new ServerMessage(ServerEvent);
 			this.ircClient.SendEvent += new CommandSent(ServerEvent);
 			this.ircClient.ChannelEvent += new ChannelMessage(ChannelEvent);*/
-			this.ircClient.Connect("irc.freenode.net", 6667,"taftse taftse","Taftse|Test");
+			this.ircClient.Connect("irc.rizon.net", 6667, "KopiXChat", "KopiXChat-test");
 		}
 
 		private void SentServerCommands(Server server, string message)
@@ -74,9 +74,11 @@ namespace KopiXChat
 			}
 			else
 			{
-				switch (message)
+				switch(message)
 				{
-					case "CONNECT": this.JoindServer(server); break;
+					case "CONNECT":
+						this.JoindServer(server);
+						break;
 					//default: this.PrintToChatWindow(server, message); break;
 				}
 			}
@@ -151,22 +153,21 @@ namespace KopiXChat
 
 		private void JoindServer(Server server)
 		{
-			
-				TreeNode newServer = new TreeNode();
-				newServer.Name = "serverNode_" + server.Name;
-				newServer.Text = " " + server.Name;
-				this.ChannelList.Nodes.Add(newServer);
-				this.SelectChannelListNode(newServer);
+			TreeNode newServer = new TreeNode();
+			newServer.Name = "serverNode_" + server.Name;
+			newServer.Text = " " + server.Name;
+			this.ChannelList.Nodes.Add(newServer);
+			this.SelectChannelListNode(newServer);
 		}
 
 		private void JoinedChannel(Server server,Channel channel)
 		{
-				TreeNode newChannel = new TreeNode();
-				newChannel.Name = "channelNode_"+ channel.Name;
-				newChannel.Text = channel.Name;
-				TreeNode[] serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
-				serverNode[0].Nodes.Add(newChannel);
-				this.SelectChannelListNode(newChannel);
+			TreeNode newChannel = new TreeNode();
+			newChannel.Name = "channelNode_"+ channel.Name;
+			newChannel.Text = channel.Name;
+			TreeNode[] serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
+			serverNode[0].Nodes.Add(newChannel);
+			this.SelectChannelListNode(newChannel);
 		}
 
 		private void LeftChannel(Server server, Channel channel)
@@ -220,10 +221,8 @@ namespace KopiXChat
 
 		private void MesageWindow_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			 if (e.KeyChar == (char)Keys.Enter)
-			{
+			if(e.KeyChar == (char)Keys.Enter)
 				this.send_message();
-			}
 		}
 
 		private void send_message()
@@ -237,7 +236,7 @@ namespace KopiXChat
 		   // {
 				string[] valueParts = new string[value.Split(' ').Length];
 				valueParts = value.Split(' ');
-				switch (valueParts[0])
+				switch(valueParts[0])
 				{
 					case "/action":
 						value = value.Replace("/action", "ACTION");

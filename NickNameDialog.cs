@@ -36,7 +36,6 @@ namespace KopiXChat
 		{
 			this.parent = parent;
 			InitializeComponent();
-			
 		}
 
 		private void nickOKbutton_Click(object sender, EventArgs e)
