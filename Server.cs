@@ -107,14 +107,7 @@ namespace System.Net.IRC.Client
 
 		public Channel getChannel(string channelName)
 		{
-			if(channelName == hostNameParts[1])
-			{
-				return this.serverChannel;
-			}
-			else
-			{
-				return this.connectedChannels[channelName];
-			}
+			return channelName == hostNameParts[1] ? this.serverChannel : this.connectedChannels[channelName];
 		}
 
 		public Server()
@@ -145,21 +138,17 @@ namespace System.Net.IRC.Client
 			this.port = port;
 			this.username = username;
 			this.nickname = nickname;
+
 			if(name == null)
-			{
 				this.name = hostNameParts[1];
-			}
 			else
-			{
 				this.name = name;
-			}
+
 			this.password = password;
 			this.connection = new TcpClient(this.host, this.port);
 
 			if(this.ServerCommandsSent != null)
-			{
 				this.ServerCommandsSent(this, "CONNECT");
-			}
 
 			this.reader = new StreamReader(this.connection.GetStream());
 			this.writer = new StreamWriter(this.connection.GetStream());
@@ -173,9 +162,7 @@ namespace System.Net.IRC.Client
 			if(this.selectedChannel == channel.Name)
 			{
 				if(this.ChannelSentMessages != null)
-				{
 					this.ChannelSentMessages(this, channel, message.Trim());
-				}
 			}
 		}
 
@@ -184,9 +171,7 @@ namespace System.Net.IRC.Client
 			if(this.selectedChannel == channel.Name)
 			{
 				if(this.ChannelReceivedMessages != null)
-				{
 					this.ChannelReceivedMessages(this, channel, message.Trim());
-				}
 			}
 		}
 
@@ -195,9 +180,7 @@ namespace System.Net.IRC.Client
 			if(this.selectedChannel == channel.Name)
 			{
 				if(this.ChannelSentCommands != null)
-				{
 					this.ChannelSentCommands(this, channel, message);
-				}
 			}
 		}
 
@@ -206,9 +189,7 @@ namespace System.Net.IRC.Client
 			if(this.selectedChannel == channel.Name)
 			{
 				if(this.ChannelReceivedCommands != null)
-				{
 					this.ChannelReceivedCommands(this, channel, message);
-				}
 			}
 		}
 
@@ -223,20 +204,16 @@ namespace System.Net.IRC.Client
 		private void Authenticate()
 		{
 			if(this.password != null)
-			{
 				this.SendCommand("PASS", this.password);
-			}
+
 			this.SendCommand("NICK", this.nickname);
 
 			string isVisable = this.isInvisble ? "8" : "0";
+
 			if(this.username != null)
-			{
 				this.SendCommand("USER", this.username + " " + isVisable + " " + this.realName);
-			}
 			else
-			{
 				this.SendCommand("USER", this.NickName + " " + isVisable + " " + this.realName);
-			}
 		}
 
 		private void Listen()
@@ -261,70 +238,60 @@ namespace System.Net.IRC.Client
 
 					string[] commandhostParts = commandParts[0].Split('.');
 
-					if(commandParts.Length > 3 && (connectedChannels.ContainsKey(commandParts[2]) == true))
-					{
+					if(commandParts.Length > 3 && (connectedChannels.ContainsKey(commandParts[2])))
 						this.connectedChannels[commandParts[2]].recevedCommands(commandParts);
-					}
-					else if(commandParts.Length > 4 && (connectedChannels.ContainsKey(commandParts[3]) == true))
+					else if(commandParts.Length > 4 && (connectedChannels.ContainsKey(commandParts[3])))
+						this.connectedChannels[commandParts[3]].recevedCommands(commandParts);
+					else if(commandParts.Length > 5 && (connectedChannels.ContainsKey(commandParts[4])))
+						this.connectedChannels[commandParts[4]].recevedCommands(commandParts);
+					else
+					{
+						if((commandParts[0] == this.host) || (commandhostParts.Length > 1 && commandhostParts[1] == this.hostNameParts[1] && commandhostParts[2] == this.hostNameParts[2]))
 						{
-							this.connectedChannels[commandParts[3]].recevedCommands(commandParts);
+							switch(commandParts[1])
+							{
+								// case "332": break;
+								// case "333":
+								// case "353": /*this.serverChannel.setNickNames(commandParts);//*/this.connectedChannels[commandParts[4]].setNickNames(commandParts);/* setNamesList(commandParts);*/
+								//   break;
+								/* case "431":*/
+								case "451":
+									this.Authenticate();
+									break;
+								default:
+									this.IncomingServerMessage(commandParts);
+									break;
+							}
 						}
-						else if(commandParts.Length > 5 && (connectedChannels.ContainsKey(commandParts[4]) == true))
+						else if(commandParts[0] == "PING")
+							this.Ping(commandParts);
+						else
+						{
+							// this.serverChannel.recevedCommands(commandParts);
+							string commandAction = commandParts[1];
+							switch(commandAction)
 							{
-								this.connectedChannels[commandParts[4]].recevedCommands(commandParts);
+							//case "JOIN": this.JoinChannel(commandParts[2]); break;
+							case "PART":
+								break;
+							case "MODE":
+								break;
+							case "NICK":
+								break;
+							case "KICK":
+								break;
+							case "QUIT":
+								break;
+							case "ERROR":
+								this.Disconnect();
+								this.IncomingServerMessage(commandParts);
+								break;
+							default:
+								this.IncomingServerMessage(commandParts);
+								break;
 							}
-							else
-							{
-								if((commandParts[0] == this.host) || (commandhostParts.Length > 1 && commandhostParts[1] == this.hostNameParts[1] && commandhostParts[2] == this.hostNameParts[2]))
-								{
-									switch(commandParts[1])
-									{
-									// case "332": break;
-									//case "333":
-									//case "353": /*this.serverChannel.setNickNames(commandParts);//*/this.connectedChannels[commandParts[4]].setNickNames(commandParts);/* setNamesList(commandParts);*/
-									//   break;
-									/* case "431":*/
-									case "451":
-										this.Authenticate();
-										break;
-									default:
-										this.IncomingServerMessage(commandParts);
-										break;
-									}
-								}
-								else if(commandParts[0] == "PING")
-									{
-										this.Ping(commandParts);
-									}
-									else
-									{
-										// this.serverChannel.recevedCommands(commandParts);
-										string commandAction = commandParts[1];
-
-										switch(commandAction)
-										{
-										//case "JOIN": this.JoinChannel(commandParts[2]); break;
-										case "PART":
-											break;
-										case "MODE":
-											break;
-										case "NICK":
-											break;
-										case "KICK":
-											break;
-										case "QUIT":
-											break;
-										case "ERROR":
-											this.Disconnect();
-											this.IncomingServerMessage(commandParts);
-											break;
-										default:
-											this.IncomingServerMessage(commandParts);
-											break;
-										}
-									}
-
-							}
+						}
+					}
 				}
 				this.Disconnect();
 				break;
@@ -335,24 +302,19 @@ namespace System.Net.IRC.Client
 		{
 			string PingHash = "";
 			for(int intI = 1; intI < command.Length; intI++)
-			{
 				PingHash += command[intI] + " ";
-			}
+
 			this.SendCommand("PONG", PingHash, false);
 			if(this.ServerCommandsSent != null)
-			{
 				this.ServerCommandsSent(this, "PONG " + PingHash);
-			}
 		}
 
 		private void IncomingServerMessage(string[] command)
 		{
 			string serverMessage = "";
 			for(int intI = 0; intI < command.Length; intI++)
-			{
 				serverMessage += command[intI] + " ";
-				
-			}
+
 			//if (ServerEvent != null) { this.ServerEvent(this,serverMessage.Trim()); }
 
 			this.serverChannel.recevedCommands(command);
@@ -363,9 +325,8 @@ namespace System.Net.IRC.Client
 			Channel channel = this.connectedChannels[commandParts[2]];
 			string channelMessage = "";
 			for(int intI = 2; intI <commandParts.Length; intI++)
-			{
 				channelMessage += " " + commandParts[intI];
-			}
+
 			channel.ReceveMessage(commandParts[0], channelMessage);
 			// if (ChannelEvent != null) { this.ChannelEvent(this, channel, channelMessage); }
 			
@@ -424,36 +385,37 @@ namespace System.Net.IRC.Client
 		{
 			if(channel != null)
 			{
-				if(print == true)
+				if(print)
 				{
 					/* if (this.SendEvent != null)
 					{
 						this.SendEvent(this, command + " " + channel + " " + value);
 					}*/
 					if(this.ServerCommandsSent != null)
-					{
 						this.ServerCommandsSent(this, command + " " + channel + " " + value);
-					}
+
 					this.connectedChannels[channel].sendCommand(command, value, print);   
 				}
+
 				this.writer.WriteLine(command + " " + channel + " " + value);
 			}
 			else
 			{
-				if(print == true)
+				if(print)
 				{
 					/* if (this.SendEvent != null)
 					{
 						this.SendEvent(this, command + " " + value);
 					}*/
 					if(this.ServerCommandsSent != null)
-					{
 						this.ServerCommandsSent(this, command + " " + value);
-					}
+
 					this.serverChannel.sendCommand(command, value, print);
 				}
+
 				this.writer.WriteLine(command + " " + value);
 			}
+
 			this.writer.Flush();
 		}
 
