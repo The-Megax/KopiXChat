@@ -44,12 +44,12 @@ namespace System.Net.IRC.Client
 		public event ServerMessage ServerCommandsSent;
 		public event ServerMessage ServerCommandsReceived;
 		/*public event ChannelMessage ChannelEvent;
-       
-        public event ServerMessage ServerEvent;
-        public event CommandSent SendEvent;
-        public event ChannelMessage UserJoinEvent;
-        public event ChannelMessage UserLeaveEvent;
-        public event ServerMessage ConnectionTrafic;*/
+	   
+		public event ServerMessage ServerEvent;
+		public event CommandSent SendEvent;
+		public event ChannelMessage UserJoinEvent;
+		public event ChannelMessage UserLeaveEvent;
+		public event ServerMessage ConnectionTrafic;*/
 		private string name;
 		private string host;
 		private int port;
@@ -248,10 +248,10 @@ namespace System.Net.IRC.Client
 				while((command = this.reader.ReadLine()) != null)
 				{
 					/* if (ConnectionTrafic != null)
-                    {
-                        this.ConnectionTrafic(this, command);
-                    }
-                    */
+					{
+						this.ConnectionTrafic(this, command);
+					}
+					*/
 					if(ServerCommandsReceived != null)
 					{
 						this.ServerCommandsReceived(this, command);
@@ -359,7 +359,7 @@ namespace System.Net.IRC.Client
 			for(int intI = 0; intI < command.Length; intI++)
 			{
 				serverMessage += command[intI] + " ";
-                
+				
 			}
 			//if (ServerEvent != null) { this.ServerEvent(this,serverMessage.Trim()); }
 
@@ -376,12 +376,12 @@ namespace System.Net.IRC.Client
 			}
 			channel.ReceveMessage(commandParts[0], channelMessage);
 			// if (ChannelEvent != null) { this.ChannelEvent(this, channel, channelMessage); }
-            
+			
 		}
 
 		/**
-         * for when the client joins a channel
-         */
+		 * for when the client joins a channel
+		 */
 		public void JoinChannel(string channelName)
 		{
 			this.SendCommand("JOIN", channelName);
@@ -395,8 +395,8 @@ namespace System.Net.IRC.Client
 		}
 
 		/**
-         * for when the client leaves a channel
-         */
+		 * for when the client leaves a channel
+		 */
 		public void LeaveChannel(string channelName)
 		{
 			if(this.connectedChannels.ContainsKey(channelName))
@@ -436,9 +436,9 @@ namespace System.Net.IRC.Client
 				if(print == true)
 				{
 					/* if (this.SendEvent != null)
-                    {
-                        this.SendEvent(this, command + " " + channel + " " + value);
-                    }*/
+					{
+						this.SendEvent(this, command + " " + channel + " " + value);
+					}*/
 					if(this.ServerCommandsSent != null)
 					{
 						this.ServerCommandsSent(this, command + " " + channel + " " + value);
@@ -452,9 +452,9 @@ namespace System.Net.IRC.Client
 				if(print == true)
 				{
 					/* if (this.SendEvent != null)
-                    {
-                        this.SendEvent(this, command + " " + value);
-                    }*/
+					{
+						this.SendEvent(this, command + " " + value);
+					}*/
 					if(this.ServerCommandsSent != null)
 					{
 						this.ServerCommandsSent(this, command + " " + value);
