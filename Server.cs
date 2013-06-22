@@ -387,11 +387,10 @@ namespace System.Net.IRC.Client
 			this.SendCommand("JOIN", channelName);
 			Channel joinedChannel = new Channel(this, channelName);
 			this.connectedChannels.Add(channelName, joinedChannel);
+
 			//if (this.ChannelEvent != null) { this.ChannelEvent(this, joinedChannel, "JOIN"); } 
 			if(this.ChannelSentCommands != null)
-			{
 				this.ChannelSentCommands(this, joinedChannel, "JOIN");
-			}
 		}
 
 		/**
@@ -402,11 +401,11 @@ namespace System.Net.IRC.Client
 			if(this.connectedChannels.ContainsKey(channelName))
 			{
 				this.SendCommand("PART", channelName);
-				this.connectedChannels.Remove(channelName);
+
 				if(this.ChannelSentCommands != null)
-				{ 
-					// this.ChannelSentCommands(this, this.connectedChannels[channelName], "PART"); 
-				}
+					this.ChannelSentCommands(this, this.connectedChannels[channelName], "PART"); 
+
+				this.connectedChannels.Remove(channelName);
 			}
 			else
 			{

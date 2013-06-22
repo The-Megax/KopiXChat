@@ -234,8 +234,7 @@ namespace KopiXChat
 			string value = MesageWindow.Text.ToString();
 			//if (value.Split(' ').Length > 1)
 		   // {
-				string[] valueParts = new string[value.Split(' ').Length];
-				valueParts = value.Split(' ');
+				string[] valueParts = value.Split(' ');
 				switch(valueParts[0])
 				{
 					case "/action":
