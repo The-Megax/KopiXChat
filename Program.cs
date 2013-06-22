@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Net;
 
-namespace TIRCClient
+namespace KopiXChat
 {
     static class Program
     {

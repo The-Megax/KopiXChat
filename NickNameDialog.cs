@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace TIRCClient
+namespace KopiXChat
 {
     public partial class NickNameDialog : Form
     {

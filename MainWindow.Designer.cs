@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-namespace TIRCClient
+namespace KopiXChat
 {
     partial class MainWindow
     {

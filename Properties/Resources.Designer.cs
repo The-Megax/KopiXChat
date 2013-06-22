@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TIRCClient.Properties
+namespace KopiXChat.Properties
 {
 
 

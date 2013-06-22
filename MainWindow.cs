@@ -11,7 +11,7 @@ using System.Threading;
 using System.Net.IRC;
 using System.Net.IRC.Client;
 
-namespace TIRCClient
+namespace KopiXChat
 {
     public partial class MainWindow : Form
     {
