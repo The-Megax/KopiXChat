@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KopiXChat", "KopiXChat.csproj", "{E9E69781-587C-4D39-8A79-6744B24F940E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9E69781-587C-4D39-8A79-6744B24F940E}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{E9E69781-587C-4D39-8A79-6744B24F940E}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{E9E69781-587C-4D39-8A79-6744B24F940E}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{E9E69781-587C-4D39-8A79-6744B24F940E}.Release|AnyCPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = KopiXChat.csproj
+	EndGlobalSection
+EndGlobal
