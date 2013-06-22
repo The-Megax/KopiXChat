@@ -153,17 +153,16 @@ namespace System.Net.IRC.Client
 		public void ReceveMessage(string[] commandParts)
 		{
 			string channelMessage = "";
-			for (int intI = 2; intI < commandParts.Length; intI++)
-			{
+			for(int intI = 2; intI < commandParts.Length; intI++)
 				channelMessage += " " + commandParts[intI];
-			}
+
 			messages += commandParts[0] + " " + channelMessage + " \n";
 			this.server.ReceivedChannelMessages(this, commandParts[0] + " " + channelMessage);
 		}
 
 		public void ReceveMessage(string user, string channelMessage)
 		{
-			messages +=user + " " + channelMessage+" \n";
+			messages += user + " " + channelMessage+" \n";
 			this.server.ReceivedChannelMessages(this, channelMessage);
 		}
 
@@ -187,19 +186,6 @@ namespace System.Net.IRC.Client
 					messages += command + " " + value + " \n";
 				}
 			}
-
-			//this.server.ChannelSentMessages(this, command + " " + value + " \n");
-			/*if (print == true)
-				{
-					if (this.SendEvent != null)
-					{
-						this.SendEvent(this, command + " " + value);
-					}
-				   messages +=(command + " " + channelMessage+" \n");
-				}
-				this.server.Writer.WriteLine(command + " " + value);
-			}
-			this.server.Writer.Flush();*/
 		}
 	}
 }

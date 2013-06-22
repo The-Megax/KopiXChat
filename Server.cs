@@ -151,7 +151,7 @@ namespace System.Net.IRC.Client
 				this.ServerCommandsSent(this, "CONNECT");
 
 			this.reader = new StreamReader(this.connection.GetStream());
-			this.writer = new StreamWriter(this.connection.GetStream());
+			this.writer = new StreamWriter(this.connection.GetStream()) { AutoFlush = true };
 			this.Authenticate();
 			this.isConnected = true;
 			this.Listen();
@@ -415,8 +415,6 @@ namespace System.Net.IRC.Client
 
 				this.writer.WriteLine(command + " " + value);
 			}
-
-			this.writer.Flush();
 		}
 
 		public void ChangeNickName(string newNickname)
