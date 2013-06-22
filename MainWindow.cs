@@ -46,7 +46,7 @@ namespace KopiXChat
 		{
 			InitializeComponent();
 			serverThread = new Thread(new ThreadStart(ClientConnection));
-			serverThread.Start();		   
+			serverThread.Start();
 		}
 
 		private void ClientConnection()
@@ -268,34 +268,40 @@ namespace KopiXChat
 
 		private void SelectChannelListNode(TreeNode channel)
 		{
-			//this.selectedChannel = channel;
-			string[] channelNameParts = new string[channel.Name.Split('_').Length];
-			channelNameParts = channel.Name.Split('_');
-
-		   if (channelNameParts[0] == "serverNode")
+			try
 			{
-				if (this.ircClient.SelectedChannel != channelNameParts[1])
+				//this.selectedChannel = channel;
+				string[] channelNameParts = channel.Name.Split('_');
+
+				if (channelNameParts[0] == "serverNode")
 				{
-					this.ChannelList.SelectedNode = channel;
-					this.ircClient.SelectedChannel = channelNameParts[1];
-					Channel selectedServer = this.ircClient.getChannel(channelNameParts[1]);
-					this.ChatWindow.Text = selectedServer.Messages;
-					this.NickNameButton.Text = this.ircClient.NickName;
-					this.ChannelTitle.Text = "";
-					this.UserBox.DataSource = new List<string>();
+					if (this.ircClient.SelectedChannel != channelNameParts[1])
+					{
+						this.ChannelList.SelectedNode = channel;
+						this.ircClient.SelectedChannel = channelNameParts[1];
+						Channel selectedServer = this.ircClient.getChannel(channelNameParts[1]);
+						this.ChatWindow.Text = selectedServer.Messages;
+						this.NickNameButton.Text = this.ircClient.NickName;
+						this.ChannelTitle.Text = "";
+						this.UserBox.DataSource = new List<string>();
+					}
+				}
+				else if (channelNameParts[0] == "channelNode")
+				{
+					if (this.ircClient.SelectedChannel != channelNameParts[1])
+					{
+						this.ChannelList.SelectedNode = channel;
+						this.ircClient.SelectedChannel = channelNameParts[1];
+						Channel selectedChannel = this.ircClient.getChannel(channelNameParts[1]);
+						this.ChatWindow.Text = selectedChannel.Messages;
+						this.ChannelTitle.Text = selectedChannel.Title;
+						this.UserBox.DataSource = selectedChannel.NickNames;
+					}
 				}
 			}
-			else if (channelNameParts[0] == "channelNode")
+			catch(Exception e)
 			{
-				if (this.ircClient.SelectedChannel != channelNameParts[1])
-				{
-					this.ChannelList.SelectedNode = channel;
-					this.ircClient.SelectedChannel = channelNameParts[1];
-					Channel selectedChannel = this.ircClient.getChannel(channelNameParts[1]);
-					this.ChatWindow.Text = selectedChannel.Messages;
-					this.ChannelTitle.Text = selectedChannel.Title;
-					this.UserBox.DataSource = selectedChannel.NickNames;
-				}
+				Console.WriteLine(e);
 			}
 		}
 
