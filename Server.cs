@@ -255,11 +255,10 @@ namespace System.Net.IRC.Client
 							Ping(commandParts);
 						else
 						{
-							// serverChannel.recevedCommands(commandParts);
-							string commandAction = commandParts[1];
-							switch(commandAction)
+							switch(commandParts[1])
 							{
-							//case "JOIN": JoinChannel(commandParts[2]); break;
+							case "JOIN":
+								break;
 							case "PART":
 								break;
 							case "MODE":
@@ -310,7 +309,7 @@ namespace System.Net.IRC.Client
 
 		private void ReceveMessage(string[] commandParts)
 		{
-			Channel channel = connectedChannels[commandParts[2]];
+			var channel = connectedChannels[commandParts[2]];
 			string channelMessage = string.Empty;
 			for(int intI = 2; intI <commandParts.Length; intI++)
 				channelMessage += " " + commandParts[intI];
