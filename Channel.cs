@@ -31,111 +31,124 @@ namespace System.Net.IRC.Client
 	{
 		//public event ChannelMessage ChannelEvent;
 
-		private string name;
-		private string title = "";
+		private string _name;
+		private string _title = string.Empty;
 		// private string titleCreater;
-		private Server server;
+		private Server _server;
 		//private List<string> nickNames;
-		private List<User> nickNames;
+		private List<User> _nickNames;
 
 		//private List<string> messages = new List<string>();
-		private string messages = "";
+		private string _messages = string.Empty;
 
 		public string Name
 		{
-			get { return this.name; }
-			set { this.name = value; }
+			get { return _name; }
+			set { _name = value; }
 		}
 
 		public string Title
 		{
-			get { return this.title; }
+			get { return _title; }
 		}
 
 		public Server Server
 		{
-			get { return this.server; }
+			get { return _server; }
 		}
 
 		public string Messages
 		{
-			get { return this.messages; }
+			get { return _messages; }
 		}
 
 		public List<User> NickNames
 		{
-			get { return this.nickNames; }
+			get { return _nickNames; }
 		}
 
 		public Channel(Server server, string name)
 		{
-			this.nickNames = new List<User>();
-			this.server = server;
-			this.name = name;
+			_nickNames = new List<User>();
+			_server = server;
+			_name = name;
 		}
 
 		public void Join(string username)
 		{
 			Console.WriteLine("join: " + username);
 			User user = new User(username);
-			this.nickNames.Add(user);
-			//this.nickNames.Sort();
-			this.server.ReceivedChannelCommands(this, "JOIN");
+			_nickNames.Add(user);
+			//_nickNames.Sort();
+			_server.ReceivedChannelCommands(this, "JOIN");
 		}
 
 		public void Leave(string username)
 		{
 			Console.WriteLine("leave: " + username);
-			// this.nickNames.Remove(username);
-		   
-			this.server.ReceivedChannelCommands(this, "PART");
+			// _nickNames.Remove(username);
+			_server.ReceivedChannelCommands(this, "PART");
 		}
 
 		public void recevedCommands(string[] commandParts)
 		{
-			string commandAction = commandParts[1];
-			switch(commandAction)
+			switch(commandParts[1])
 			{
-				case "332":
-				case "333": this.setTitle(commandParts); break;
-				case "353": this.setNickNames(commandParts); break;
-				case "366": break;
-				case "328": break;
-				case "JOIN": this.Join(commandParts[0]); break;
-				case "PART": this.Leave(commandParts[0]); break;
-				case "MODE": break;
-				case "NICK": break;
-				case "KICK": break;
-				case "QUIT": break;
-				case "PRIVMSG": this.ReceveMessage(commandParts); break;
-				default: this.ReceveMessage(commandParts); break;
+			case "332":
+			case "333":
+				setTitle(commandParts);
+				break;
+			case "353":
+				setNickNames(commandParts);
+				break;
+			case "366":
+				break;
+			case "328":
+				break;
+			case "JOIN":
+				Join(commandParts[0]);
+				break;
+			case "PART":
+				Leave(commandParts[0]);
+				break;
+			case "MODE":
+				break;
+			case "NICK":
+				break;
+			case "KICK":
+				break;
+			case "QUIT":
+				break;
+			case "PRIVMSG":
+				ReceveMessage(commandParts);
+				break;
+			default:
+				ReceveMessage(commandParts);
+				break;
 			}
 		}
 
 		public void setTitle(string[] commandParts)
 		{
-			if (commandParts[1] == "332")
+			if(commandParts[1] == "332")
 			{
-				string title = "";
-				if (commandParts[4].Substring(0, 1) == ":")
-				{
+				string title = string.Empty;
+				if(commandParts[4].Substring(0, 1) == ":")
 					commandParts[4] = commandParts[4].Remove(0, 1);
-				}
 
-				for (int intI = 4; intI < commandParts.Length; intI++)
-				{
+				for(int intI = 4; intI < commandParts.Length; intI++)
 					title += " " + commandParts[intI];
-				}
-				this.messages += title + " \n";
-				this.title += title;
-				this.server.ReceivedChannelMessages(this, title);
-				this.server.ReceivedChannelCommands(this, "TOPIC");
+
+				_messages += title + " \n";
+				_title += title;
+				_server.ReceivedChannelMessages(this, title);
+				_server.ReceivedChannelCommands(this, "TOPIC");
 			}
 			else if (commandParts[1] == "333")
 			{
-				string message = "Topic for " + this.name + " set by " + commandParts[4] + " on " + " \n";
-				this.messages += message;
-				this.server.ReceivedChannelMessages(this, message);
+				string message = "Topic for " + _name + " set by " + commandParts[4] + " on " + " \n";
+				_messages += message;
+				_server.ReceivedChannelMessages(this, message);
 			}
 		}
 
@@ -144,47 +157,43 @@ namespace System.Net.IRC.Client
 			for(int intI = 5; intI < commandParts.Length; intI++)
 			{
 				User newUser = new User(commandParts[intI]);
-				this.nickNames.Add(newUser);
+				_nickNames.Add(newUser);
 			}
-			//this.nickNames.Sort();
-			this.server.ReceivedChannelCommands(this, "NAMES");
+			//_nickNames.Sort();
+			_server.ReceivedChannelCommands(this, "NAMES");
 		}
 
 		public void ReceveMessage(string[] commandParts)
 		{
-			string channelMessage = "";
+			string channelMessage = string.Empty;
 			for(int intI = 2; intI < commandParts.Length; intI++)
 				channelMessage += " " + commandParts[intI];
 
-			messages += commandParts[0] + " " + channelMessage + " \n";
-			this.server.ReceivedChannelMessages(this, commandParts[0] + " " + channelMessage);
+			_messages += commandParts[0] + " " + channelMessage + " \n";
+			_server.ReceivedChannelMessages(this, commandParts[0] + " " + channelMessage);
 		}
 
 		public void ReceveMessage(string user, string channelMessage)
 		{
-			messages += user + " " + channelMessage+" \n";
-			this.server.ReceivedChannelMessages(this, channelMessage);
+			_messages += user + " " + channelMessage+" \n";
+			_server.ReceivedChannelMessages(this, channelMessage);
 		}
 
 		public void SendMessage(string message)
 		{
-			this.messages += message + "\r\n";
-			this.server.SentChannelMessages(this, message);
+			_messages += message + "\r\n";
+			_server.SentChannelMessages(this, message);
 		}
 
 		public void sendCommand(string command, string value, bool print)
 		{
 
-			if (command == "PRIVMSG")
-			{
-				this.SendMessage(value);
-			}
+			if(command == "PRIVMSG")
+				SendMessage(value);
 			else
 			{
-				if (print == true)
-				{
-					messages += command + " " + value + " \n";
-				}
+				if(print)
+					_messages += command + " " + value + " \n";
 			}
 		}
 	}

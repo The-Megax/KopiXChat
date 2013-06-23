@@ -27,20 +27,20 @@ namespace System.Net.IRC.Client
 {
 	public class User
 	{
-		private string nickName = string.Empty;
+		private string nickname = string.Empty;
 		//private string connection = "";
-		private Color nickColor;
+		private Color nickcolor;
 		//private string[] modes;
 
 		public string NickName
 		{
-			get { return this.nickName; }
-			set { this.nickName = value; }
+			get { return nickname; }
+			set { nickname = value; }
 		}
 
 		public Color Color
 		{
-			get { return this.nickColor; }
+			get { return nickcolor; }
 		}
 
 		/*public string[] Modes
@@ -48,17 +48,17 @@ namespace System.Net.IRC.Client
 			get { return this.modes; }
 		}*/
 
-		public User(string nickName)
+		public User(string Nickname)
 		{
 			//split on !~
-			this.nickName = nickName;
+			nickname = Nickname;
 			var random = new Random();
-			this.nickColor = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
+			nickcolor = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
 		}
 
 		public override string ToString()
 		{
-			return nickName;
+			return nickname;
 		}
 	}
 }
