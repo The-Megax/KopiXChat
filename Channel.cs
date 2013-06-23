@@ -29,7 +29,7 @@ namespace System.Net.IRC.Client
 
 	public class Channel
 	{
-		public event ChannelMessage ChannelEvent;
+		//public event ChannelMessage ChannelEvent;
 
 		private string name;
 		private string title = "";

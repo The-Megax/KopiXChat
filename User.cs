@@ -27,7 +27,7 @@ namespace System.Net.IRC.Client
 {
 	public class User
 	{
-		private string nickName = "";
+		private string nickName = string.Empty;
 		//private string connection = "";
 		private Color nickColor;
 		//private string[] modes;
@@ -52,7 +52,7 @@ namespace System.Net.IRC.Client
 		{
 			//split on !~
 			this.nickName = nickName;
-			Random random = new Random();
+			var random = new Random();
 			this.nickColor = Color.FromArgb(random.Next(0, 255), random.Next(0, 255), random.Next(0, 255));
 		}
 

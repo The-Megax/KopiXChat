@@ -46,9 +46,7 @@ namespace KopiXChat
 		private void nick_KeyDown(object sender, KeyPressEventArgs e)
 		{
 			if(e.KeyChar == (char)Keys.Enter)
-			{
 				this.changeNick();
-			}
 		}
 
 		private void changeNick()

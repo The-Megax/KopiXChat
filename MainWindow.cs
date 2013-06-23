@@ -35,7 +35,7 @@ namespace KopiXChat
 	public partial class MainWindow : Form
 	{
 		//delegate void SetTextCallback(string text);
-		delegate void setChannelCallback(Server server,Channel channel,string message);
+		delegate void setChannelCallback(Server server, Channel channel, string message);
 		delegate void setServerCallback(Server server, string message);
 
 		private Thread serverThread;
@@ -67,9 +67,9 @@ namespace KopiXChat
 
 		private void SentServerCommands(Server server, string message)
 		{
-			if (this.InvokeRequired)
+			if(this.InvokeRequired)
 			{
-				setServerCallback s = new setServerCallback(SentServerCommands);
+				var s = new setServerCallback(SentServerCommands);
 				this.Invoke(s, new object[] { server, message });
 			}
 			else
@@ -86,43 +86,43 @@ namespace KopiXChat
 
 		private void ReceivedChannelMessages(Server server, Channel channel, string message)
 		{
-			if (this.InvokeRequired)
+			if(this.InvokeRequired)
 			{
-				setChannelCallback s = new setChannelCallback(ReceivedChannelMessages);
+				var s = new setChannelCallback(ReceivedChannelMessages);
 				this.Invoke(s, new object[] { server, channel, message });
 			}
 			else
-			{
 				this.PrintToChatWindow(server, message);
-			}
 		}
 
 		private void SentChannelMessages(Server server, Channel channel, string message)
 		{
-			if (this.InvokeRequired)
+			if(this.InvokeRequired)
 			{
-				setChannelCallback s = new setChannelCallback(SentChannelMessages);
-				this.Invoke(s,new object[] {server,channel,message});
+				var s = new setChannelCallback(SentChannelMessages);
+				this.Invoke(s, new object[] { server, channel, message });
 			}
 			else
-			{
 				this.PrintToChatWindow(server, message);
-			}
 		}
 
 		private void SentChannelCommands(Server server, Channel channel, string message)
 		{
-			if (this.InvokeRequired)
+			if(this.InvokeRequired)
 			{
-				setChannelCallback s = new setChannelCallback(SentChannelCommands);
+				var s = new setChannelCallback(SentChannelCommands);
 				this.Invoke(s, new object[] { server, channel, message });
 			}
 			else
 			{
 				switch (message)
 				{
-					case "JOIN": this.JoinedChannel(server, channel); break;
-					case "PART": this.LeftChannel(server, channel); break;
+				case "JOIN":
+					this.JoinedChannel(server, channel);
+					break;
+				case "PART":
+					this.LeftChannel(server, channel);
+					break;
 					//default: this.ChatWindow.AppendText(message + " \n"); break;
 				}
 			}
@@ -130,18 +130,24 @@ namespace KopiXChat
 
 		private void ReceivedChannelCommands(Server server, Channel channel, string message)
 		{
-			if (this.InvokeRequired)
+			if(this.InvokeRequired)
 			{
-				setChannelCallback s = new setChannelCallback(ReceivedChannelCommands);
+				var s = new setChannelCallback(ReceivedChannelCommands);
 				this.Invoke(s, new object[] { server, channel, message });
 			}
 			else
 			{
 				switch (message)
 				{
-					case "NAMES": this.UserBox.DataSource = channel.NickNames; break;
-					case "JOIN": this.UserBox.DataSource = channel.NickNames; break;
-					case "TOPIC": this.ChannelTitle.Text = channel.Title; break;
+				case "NAMES":
+					this.UserBox.DataSource = channel.NickNames;
+					break;
+				case "JOIN":
+					this.UserBox.DataSource = channel.NickNames;
+					break;
+				case "TOPIC":
+					this.ChannelTitle.Text = channel.Title;
+					break;
 				}
 			}
 		}
@@ -153,7 +159,7 @@ namespace KopiXChat
 
 		private void JoindServer(Server server)
 		{
-			TreeNode newServer = new TreeNode();
+			var newServer = new TreeNode();
 			newServer.Name = "serverNode_" + server.Name;
 			newServer.Text = " " + server.Name;
 			this.ChannelList.Nodes.Add(newServer);
@@ -162,18 +168,18 @@ namespace KopiXChat
 
 		private void JoinedChannel(Server server,Channel channel)
 		{
-			TreeNode newChannel = new TreeNode();
-			newChannel.Name = "channelNode_"+ channel.Name;
+			var newChannel = new TreeNode();
+			newChannel.Name = "channelNode_" + channel.Name;
 			newChannel.Text = channel.Name;
-			TreeNode[] serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
+			var serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
 			serverNode[0].Nodes.Add(newChannel);
 			this.SelectChannelListNode(newChannel);
 		}
 
 		private void LeftChannel(Server server, Channel channel)
 		{
-			TreeNode[] serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
-			TreeNode[] channelNode = serverNode[0].Nodes.Find("channelNode_" + channel.Name, false);
+			var serverNode = this.ChannelList.Nodes.Find("serverNode_" + server.Name, false);
+			var channelNode = serverNode[0].Nodes.Find("channelNode_" + channel.Name, false);
 			serverNode[0].Nodes.Remove(channelNode[0]);
 		}
 
@@ -209,7 +215,7 @@ namespace KopiXChat
 
 		private void NickNameButton_Click(object sender, EventArgs e)
 		{
-		   NickNameDialog nickDialog = new NickNameDialog(this);
+		  var nickDialog = new NickNameDialog(this);
 		   nickDialog.Show();
 		}
 
@@ -227,41 +233,36 @@ namespace KopiXChat
 
 		private void send_message()
 		{
-
-		   /* string[] channelNameParts = new string[this.selectedChannel.Name.Split('_').Length];
-				channelNameParts =this.selectedChannel.Name.Split('_');*/
 			string channelName = this.ircClient.SelectedChannel;
 			string value = MesageWindow.Text.ToString();
-			//if (value.Split(' ').Length > 1)
-		   // {
-				string[] valueParts = value.Split(' ');
-				switch(valueParts[0])
-				{
-					case "/action":
-						value = value.Replace("/action", "ACTION");
-						this.ircClient.SendCommand("PRIVMSG", ":\u0001" + value + "\u0001", channelName); 
-						break;
-					case "/join": this.ircClient.JoinChannel(valueParts[1]); break;
-					case "/leave":
-						if (valueParts.Length > 1)
-						{
-							this.ircClient.LeaveChannel(valueParts[1]);
-						}
-						else
-						{
-							this.ircClient.LeaveChannel(channelName);
-						}
-						break;
-					case "/quit": this.ircClient.SendCommand("QUIT",null); break;
-					case "/msg": this.ircClient.SendCommand("PRIVMSG", ":" + valueParts[2], valueParts[1]); break;
+			string[] valueParts = value.Split(' ');
 
-					default: this.ircClient.SendCommand("PRIVMSG", ":" + value, channelName); break;
-				}
-		   /* }
-			else
+			switch(valueParts[0])
 			{
-				this.ircClient.SendCommand("PRIVMSG",":"+ value, channelName);
-			}*/
+			case "/action":
+				value = value.Replace("/action", "ACTION");
+				this.ircClient.SendCommand("PRIVMSG", ":\u0001" + value + "\u0001", channelName); 
+				break;
+			case "/join":
+				this.ircClient.JoinChannel(valueParts[1]);
+				break;
+			case "/leave":
+				if(valueParts.Length > 1)
+					this.ircClient.LeaveChannel(valueParts[1]);
+				else
+					this.ircClient.LeaveChannel(channelName);
+				break;
+			case "/quit":
+				this.ircClient.SendCommand("QUIT", null);
+				break;
+			case "/msg":
+				this.ircClient.SendCommand("PRIVMSG", ":" + valueParts[2], valueParts[1]);
+				break;
+			default:
+				this.ircClient.SendCommand("PRIVMSG", ":" + value, channelName);
+				break;
+			}
+
 			MesageWindow.Text = null;
 		}
 
