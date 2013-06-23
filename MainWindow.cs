@@ -215,8 +215,8 @@ namespace KopiXChat
 
 		private void NickNameButton_Click(object sender, EventArgs e)
 		{
-		  var nickDialog = new NickNameDialog(this);
-		   nickDialog.Show();
+			var nickDialog = new NickNameDialog(this);
+			nickDialog.Show();
 		}
 
 		private void exitApplication_Click(object sender, EventArgs e)
